@@ -1,4 +1,6 @@
-var conf = config;
+import $ from 'jquery';
+import config from './config';
+import _ from 'underscore';
 
 var authWindow = null;
 var token = null;
@@ -75,8 +77,8 @@ function login() {
   var top = screen.height / 2 - height / 2;
 
   var set = {
-    client_id: conf.client_id,
-    redirect_uri: conf.redirect_uri,
+    client_id: config.client_id,
+    redirect_uri: config.redirect_uri,
     scope:
       'playlist-read playlist-read-private playlist-modify-public playlist-modify-private user-library-read user-library-modify',
     response_type: 'token',
@@ -92,14 +94,14 @@ function login() {
       ', top=' +
       top +
       ', left=' +
-      left,
+      left
   );
 }
 
 function authCallback(event) {
-  if (event.origin !== conf.uri) {
+  if (event.origin !== config.uri) {
     console.log('config.uri missconfigured:');
-    console.log({ uri: conf.uri, origin: origin });
+    console.log({uri: config.uri, origin: origin});
     return;
   }
   if (authWindow) {
@@ -159,7 +161,7 @@ function readFile(evt) {
 }
 
 function collectionProperties(coll) {
-  return { playlistCount: collPlaylistCount(coll), trackCount: collTrackCount(coll) };
+  return {playlistCount: collPlaylistCount(coll), trackCount: collTrackCount(coll)};
 }
 
 function collTrackCount(coll) {
@@ -267,7 +269,7 @@ function addToPlaylist(playlistId, trackUri) {
       '/playlists/' +
       playlistId +
       '/tracks?uris=' +
-      encodeURIComponent(trackUri),
+      encodeURIComponent(trackUri)
   );
 }
 
@@ -277,7 +279,7 @@ function makeSurePlaylistExists(name, callback) {
     callback(true);
     return;
   }
-  var set = { name: name, public: 'true' };
+  var set = {name: name, public: 'true'};
   $.ajax({
     method: 'POST',
     url: 'https://api.spotify.com/v1/users/' + userId + '/playlists',
@@ -341,7 +343,7 @@ function handlePlaylistRequestsWithTimeout(arr, callback) {
   setTimeout(function() {
     console.log('Fast runners are dead runners');
     handlePlaylistRequests(arr, callback);
-  }, conf.slowdown_import);
+  }, config.slowdown_import);
 }
 
 function handlePlaylistRequests(arr, callback) {
@@ -488,7 +490,7 @@ function loadTrackChunksWithTimeout(url, arr, callback, timeout) {
   setTimeout(function() {
     console.log('Taking breath, not to fast my cheetah');
     loadTrackChunks(url, arr, callback);
-  }, conf.slowdown_export);
+  }, config.slowdown_export);
 }
 
 function loadTrackChunks(url, arr, callback) {
@@ -502,13 +504,13 @@ function loadTrackChunks(url, arr, callback) {
       if ('items' in data) {
         $.each(data.items, function(index, value) {
           if (value.track !== null) {
-            arr.push({ id: value.track.id, uri: value.track.uri });
+            arr.push({id: value.track.id, uri: value.track.uri});
           } else {
             console.log('track is null', value);
           }
         });
       } else {
-        arr.push({ id: data.track.id, uri: data.track.uri });
+        arr.push({id: data.track.id, uri: data.track.uri});
       }
       if (data.next) {
         loadTrackChunksWithTimeout(data.next, arr, callback);
