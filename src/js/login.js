@@ -1,10 +1,10 @@
 import config from './config';
 
 window.onload = function() {
-  var target = window.self === window.top ? window.opener : window.parent;
-  var hash = window.location.hash;
+  const target = window.self === window.top ? window.opener : window.parent;
+  const hash = window.location.hash;
   if (hash) {
-    var token = window.location.hash.split('&')[0].split('=')[1];
+    const token = window.location.hash.split('&')[0].split('=')[1];
     target.postMessage(token, config.uri); //embedded
   }
 };
