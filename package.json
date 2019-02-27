@@ -6,7 +6,8 @@
   },
   "devDependencies": {
     "parcel-bundler": "1.11.0",
-    "prettier": "1.16.4"
+    "prettier": "1.16.4",
+    "rimraf": "2.6.3"
   },
   "license": "GPL-2.0",
   "main": "dist/index.js",
